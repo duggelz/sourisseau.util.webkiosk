@@ -147,6 +147,8 @@ def GetWatermark():
         ]
 
         try:
+            if not os.path.isdir(os.path.dirname(watermark_fn)):
+                os.makedirs(os.path.dirname(watermark_fn))
             #print args
             output = subprocess.check_output(args, stderr=subprocess.STDOUT)
             if output.strip():
@@ -174,10 +176,6 @@ def UpdateDestImage(source_fn, stats, wk_rel_path, wk_ext, dest_dir, size_limit,
     stats.updated += 1
     print "Updating %s from %s" % (dest_fn, source_fn)
 
-    if not os.path.isdir(os.path.dirname(dest_fn)):
-        os.makedirs(os.path.dirname(dest_fn))
-    #
-
     args = [
         ImageMagickPath('convert'),
         #'-bench', '2',
@@ -196,6 +194,9 @@ def UpdateDestImage(source_fn, stats, wk_rel_path, wk_ext, dest_dir, size_limit,
     args.extend(['JPEG:' + dest_fn])
 
     try:
+        if not os.path.isdir(os.path.dirname(dest_fn)):
+            os.makedirs(os.path.dirname(dest_fn))
+        #
         #print args
         output = subprocess.check_output(args, stderr=subprocess.STDOUT)
         if output.strip():
