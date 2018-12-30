@@ -1,0 +1,41 @@
+{
+    "global_config": {
+        "access_size_limit": "1024x1024",
+        "preview_size_limit": "300x300",
+        "thumbnail_size_limit": "128x128",
+        "watermark_filename": "watermark.tif",
+        "watermark_create_args": [
+            "-size", "4096x4096",
+            "-background", "none",
+            "-stroke", "black",
+            "-virtual-pixel", "tile",
+            "-gravity", "center",
+            "-fill", "grey75",
+            "-font", "Arial",
+            "label: Sourisseau Academy for State and Local History ",
+            "-define", "distort:viewport=1024x1024-512-512",
+            "-distort", "Arc", "360 90 1300"
+        ],
+        "watermark_apply_args": [
+            "-gravity", "center",
+            "-compose", "dissolve", "-define", "compose:args=30,100",
+            "-composite"
+        ]
+    },
+    "host_config": {
+        "SLICK": {
+            "source_pathspecs": [
+                "y:/Edith Smith Collections/Images/*/*/*.tif",
+                "y:/Sourisseau Collections/Photo Collection/Images/*/*/*.tif"
+            ],
+            "dest_root": "e:/EmbARK_Web_Kiosk/Database/webfolder/Media"
+        },
+        "SOURISSEAU-MCP": {
+            "source_pathspecs": [
+                "h:/Edith Smith Collections/Images/*/*/*.tif",
+                "h:/Sourisseau Collections/Photo Collection/Images/*/*/*.tif"
+            ],
+            "dest_root": "h:/Sourisseau Website/webkiosk/webfolder/Media"
+        }
+    }
+}
