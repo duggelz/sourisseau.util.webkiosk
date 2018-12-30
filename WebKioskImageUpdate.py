@@ -167,7 +167,11 @@ def GetWatermark(config):
     watermark_fn = os.path.join(config.dest_root, config.watermark_filename)
     if NeedsUpdate(None, watermark_fn):
         print('Updating watermark %s' % watermark_fn)
-        args = [ImageMagickPath('convert')] + config.watermark_create_args + [watermark_fn]
+        args = [
+            ImageMagickPath('magick')
+        ] + config.watermark_create_args + [
+            watermark_fn
+        ]
 
         try:
             print("    Running %s" % args)
@@ -202,7 +206,7 @@ def UpdateDestImage(config, stats, source_fn, dest_fn, size_limit, watermark):
     print('  Updating from %s' % (source_fn,))
 
     args = [
-        ImageMagickPath('convert'),
+        ImageMagickPath('magick'),
         #'-bench', '2',
         source_fn + '[0]', # select first page of multi-page tiff
         '-thumbnail', size_limit,
