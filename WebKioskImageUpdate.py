@@ -1,11 +1,8 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 #
-# Generate thumbnails for WebKiosk and transfer them to a remote server
+# Generate thumbnails for WebKiosk
 #
 # Author: Douglas Greiman, 2015
-#
-# Note: Images in the Media/Images directory are really JPEG format,
-# even though their file extensions are .tif
 #
 # Quick and dirty code, error-handling is minimal
 
@@ -30,9 +27,7 @@ import winreg
 
 CONFIG_FN = './WebKioskImageUpdate.json'
 
-# Transform source filename to dest (relative) filename to make
-# WebKiosk happy, by removing all subdirectory information and
-# collecting all image files in a single directory.
+# Regular expression used in WKManglePath()
 WK_MANGLE = (
     r'^.*\\Images\\(.*)[.]tif$',
     r'\1',
@@ -83,7 +78,7 @@ def ReadConfig():
         preview_size_limit: Maximum size of preview image, in pixels
         thumbnail_size_limit: Maximum size of thumbnail image, in pixels
 
-        watermark_filename: Filename to store watermark image in
+        watermark_basename_template: Base filename to store watermark image in
         watermark_create_args: ImageMagick command line for creating watermark image
         watermark_create_args: ImageMagick command line to applying watermark to another image
 
@@ -123,7 +118,12 @@ def ImageMagickPath(tool, cache={}):
 def WKManglePath(source_fn):
     """Return relative filename expected by WebKiosk, given a filename from EmbARK
 
-    Returns None if filename format is unrecognized"""
+    Find the right-most instance of a directory called "Images", and
+    take the relative path under that.  Strip off file extension.
+
+    Returns None if filename format is unrecognized
+
+    """
     wk_fn = re.sub(WK_MANGLE[0], WK_MANGLE[1], source_fn,
                    WK_MANGLE[2], WK_MANGLE[3])
     if wk_fn == source_fn:
@@ -131,6 +131,9 @@ def WKManglePath(source_fn):
     else:
         return wk_fn
 
+assert (
+    WKManglePath('Y:\\Edith Smith Collections\\Images\\4000\\4400\\ecs4404.tif') ==
+    '4000\\4400\\ecs4404')
 
 def NeedsUpdate(fn1, fn2):
     """Determine if an image should be (re)generated.
@@ -162,14 +165,15 @@ def NeedsUpdate(fn1, fn2):
     return False
 
 
-def GetWatermark(config):
+def GetWatermark(config, size_limit):
     """Return filename of watermark image, generating file if needed"""
-    watermark_fn = os.path.join(config.dest_root, config.watermark_filename)
+    watermark_basename = config.watermark_basename_template % size_limit
+    watermark_fn = os.path.join(config.dest_root, watermark_basename)
     if NeedsUpdate(None, watermark_fn):
         print('Updating watermark %s' % watermark_fn)
         args = [
             ImageMagickPath('magick')
-        ] + config.watermark_create_args + [
+        ] + config.watermark_create_args[size_limit] + [
             watermark_fn
         ]
 
@@ -212,7 +216,7 @@ def UpdateDestImage(config, stats, source_fn, dest_fn, size_limit, watermark):
         '-thumbnail', size_limit,
         ]
     if watermark:
-        watermark_fn = GetWatermark(config)
+        watermark_fn = GetWatermark(config, size_limit)
         args.extend([watermark_fn])
         args.extend(config.watermark_apply_args)
     args.extend(['JPEG:' + dest_fn])
@@ -239,11 +243,11 @@ def UpdateFromSourceImage(config, stats, source_fn):
         return
 
     UpdateDestImage(config, stats, source_fn,
-                    os.path.join(config.dest_root, 'Images', wk_rel_path + '.tif'),
+                    os.path.join(config.dest_root, 'Images', wk_rel_path + '.jpg'),
                     config.access_size_limit, watermark=True)
     UpdateDestImage(config, stats, source_fn,
                     os.path.join(config.dest_root, 'Previews', wk_rel_path + '.jpg'),
-                    config.preview_size_limit, watermark=False)
+                    config.preview_size_limit, watermark=True)
     UpdateDestImage(config, stats, source_fn,
                     os.path.join(config.dest_root, 'Thumbnails', wk_rel_path + '.jpg'),
                     config.thumbnail_size_limit, watermark=False)
@@ -278,7 +282,9 @@ Done""" % (
 def main():
     print("Starting WebKioskImageUpdate.py at %s" % (datetime.datetime.now().isoformat(),))
     config = ReadConfig()
-    GetWatermark(config)
+    # Ensure watermarks exist
+    GetWatermark(config, config.access_size_limit)
+    GetWatermark(config, config.preview_size_limit)
     UpdateAll(config)
 
 #------------------------------------------------------------------------------

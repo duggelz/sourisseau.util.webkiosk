@@ -3,39 +3,61 @@
         "access_size_limit": "1024x1024",
         "preview_size_limit": "300x300",
         "thumbnail_size_limit": "128x128",
-        "watermark_filename": "watermark.tif",
-        "watermark_create_args": [
-            "-size", "4096x4096",
-            "-background", "none",
-            "-stroke", "black",
-            "-virtual-pixel", "tile",
-            "-gravity", "center",
-            "-fill", "grey75",
-            "-font", "Arial",
-            "label: Sourisseau Academy for State and Local History ",
-            "-define", "distort:viewport=1024x1024-512-512",
-            "-distort", "Arc", "360 90 1300"
-        ],
+        "watermark_basename_template": "watermark%s.tif",
+        "watermark_create_args": {
+            "1024x1024": [
+                "-size", "4096x4096",
+                "-background", "none",
+                "-stroke", "black",
+                "-virtual-pixel", "tile",
+                "-gravity", "center",
+                "-fill", "grey75",
+                "-font", "Arial",
+                "label: Sourisseau Academy for State and Local History ",
+                "-define", "distort:viewport=1024x1024-512-512",
+                "-distort", "Arc", "360 90 1024"
+            ],
+            "300x300": [
+                "-size", "4096x4096",
+                "-background", "none",
+                "-stroke", "black",
+                "-virtual-pixel", "tile",
+                "-gravity", "center",
+                "-fill", "grey75",
+                "-font", "Arial",
+                "label: Sourisseau Academy for State and Local History ",
+                "-define", "distort:viewport=300x300-150-150",
+                "-distort", "Arc", "360 90 300"
+            ]
+        },
         "watermark_apply_args": [
             "-gravity", "center",
-            "-compose", "dissolve", "-define", "compose:args=30,100",
+            "-compose", "dissolve",
+            "-define", "compose:args=50,100",
             "-composite"
         ]
     },
     "host_config": {
         "SLICK": {
             "source_pathspecs": [
-                "y:/Edith Smith Collections/Images/*/*/*.tif",
-                "y:/Sourisseau Collections/Photo Collection/Images/*/*/*.tif"
+                "H:/Edith Smith Collections/Images/*/*/*.tif",
+                "H:/Sourisseau Collections/Photo Collection/Images/*/*/*.tif"
             ],
-            "dest_root": "e:/EmbARK_Web_Kiosk/Database/webfolder/Media"
+            "dest_root": "C:/Users/duggelz/Documents/dwg/Source/Sourisseau Programs/EmbarkWebKiosk_Output"
         },
         "SOURISSEAU-MCP": {
             "source_pathspecs": [
-                "h:/Edith Smith Collections/Images/*/*/*.tif",
-                "h:/Sourisseau Collections/Photo Collection/Images/*/*/*.tif"
+                "H:/Edith Smith Collections/Images/*/*/*.tif",
+                "H:/Sourisseau Collections/Photo Collection/Images/*/*/*.tif"
             ],
             "dest_root": "h:/Sourisseau Website/webkiosk/webfolder/Media"
+        },
+        "SOURISSEAU-MCP2": {
+            "source_pathspecs": [
+                "H:/Edith Smith Collections/Images/*/*/*.tif",
+                "H:/Sourisseau Collections/Photo Collection/Images/*/*/*.tif"
+            ],
+            "dest_root": "H:/Sourisseau Website/webkiosk/webfolder/Media"
         }
     }
 }
