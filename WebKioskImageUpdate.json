@@ -55,7 +55,12 @@
         "SOURISSEAU-MCP2": {
             "source_pathspecs": [
                 "H:/Edith Smith Collections/Images/*/*/*.tif",
-                "H:/Sourisseau Collections/Photo Collection/Images/*/*/*.tif"
+                "H:/Sourisseau Collections/Photo Collection/Images/*/*/*.tif",
+                "H:/Edith Smith Collections/Collections/McKay/neg scans/*/*/*.tif",
+                "H:/Edith Smith Collections/Collections/McKay/neg scans/*/*/*.jpg",
+                "H:/Edith Smith Collections/Del Carlo/Scans/*/*.tif",
+                "H:/Edith Smith Collections/Del Carlo/Scans/*/*/*.tif",
+                "H:/Edith Smith Collections/Collections/postcards/*/*/*.tif"
             ],
             "dest_root": "H:/Sourisseau Website/webkiosk/webfolder/Media"
         }

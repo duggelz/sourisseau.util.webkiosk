@@ -28,12 +28,32 @@ import winreg
 CONFIG_FN = './WebKioskImageUpdate.json'
 
 # Regular expression used in WKManglePath()
-WK_MANGLE = (
+WK_MANGLES = [
+(
     r'^.*\\Images\\(.*)[.]tif$',
     r'\1',
     1,
     re.IGNORECASE
-)
+),
+(
+    r'^.*\\McKay\\neg scans\\(.*)[.](tif|jpg)$',
+    r'\1',
+    1,
+    re.IGNORECASE
+),
+(
+    r'^.*\\Del Carlo\\Scans\\(.*)[.](tif|jpg)',
+    r'\1',
+    1,
+    re.IGNORECASE
+),
+(
+    r'^.*\\Collections\\postcards\\(.*)[.](tif|jpg)',
+    r'\1',
+    1,
+    re.IGNORECASE
+),
+]
 
 #------------------------------------------------------------------------------
 # Classes/Functions
@@ -124,12 +144,13 @@ def WKManglePath(source_fn):
     Returns None if filename format is unrecognized
 
     """
-    wk_fn = re.sub(WK_MANGLE[0], WK_MANGLE[1], source_fn,
-                   WK_MANGLE[2], WK_MANGLE[3])
-    if wk_fn == source_fn:
-        return None
-    else:
-        return wk_fn
+    for mangle in WK_MANGLES:
+        wk_fn = re.sub(
+            mangle[0], mangle[1], source_fn,
+            mangle[2], mangle[3])
+        if wk_fn != source_fn:
+            return wk_fn
+    return None
 
 assert (
     WKManglePath('Y:\\Edith Smith Collections\\Images\\4000\\4400\\ecs4404.tif') ==
