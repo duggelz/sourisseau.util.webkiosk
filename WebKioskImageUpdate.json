@@ -60,7 +60,8 @@
                 "H:/Edith Smith Collections/Collections/McKay/neg scans/*/*/*.jpg",
                 "H:/Edith Smith Collections/Del Carlo/Scans/*/*.tif",
                 "H:/Edith Smith Collections/Del Carlo/Scans/*/*/*.tif",
-                "H:/Edith Smith Collections/Collections/postcards/*/*/*.tif"
+                "H:/Edith Smith Collections/Collections/postcards/*/*/*.tif",
+                "H:/Sourisseau Collections/Collections/Layton/*/*/*.tif"
             ],
             "dest_root": "H:/Sourisseau Website/webkiosk/webfolder/Media"
         }
